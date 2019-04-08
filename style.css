@@ -1,0 +1,10 @@
+focus {
+  outline: none;
+}
+html, body, main {height: 100%;}
+
+.container-fluid, .row, .column {height: 100%;}
+
+textarea {
+  height: 500px;
+  }

@@ -22,35 +22,68 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Export
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalHtml">HTML source</a>
+            </div>
           </li>
       </div>
     </nav>
-      <main> 
-    <div class="container-fluid">
+    <!-- モーダルウインドウ -->
+    <div class="modal fade" id="modalHtml" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalScrollableTitle">HTML source</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="html-source">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Downloads</button>
+          </div>
+        </div>
+      </div>
+    </div>
+   <main> 
+     <div class="container-fluid">
         <div class="row">
           <!-- 入力欄 -->
           <div class="col-sm-6">
             <textarea id="md-input" class="form-control"
-              rows="35" onKeyUp="controller()">ここにマークダウンを記入</textarea>
+              rows="35" onKeyUp="controller()" autofocus placeholder="# Start markdown here"></textarea>
           </div><!-- col -->
           <!-- 出力欄 -->
-           <div class="col-sm-6">
+          <div class="col-sm-6">
              <div id="html-output">
-           </div><!-- col -->
-         </div><!-- row -->
-    </div>
-      </main>
+          </div><!-- col -->
+        </div><!-- row -->
+      </div>
+    </main>
     <script>
+      // 変換後のHTML
+      var html;
       // 入力値をマークダウンに変換
       function convert(){
-        s = document.getElementById("md-input").value;
-        document.getElementById("html-output").innerHTML = marked(s);
+        var s = document.getElementById("md-input").value;
+        return marked(s);
+      }
+     function setSource(){
+        document.getElementById("html-source").innerHTML = "<pre>" +  html.replace(/</g,"&lt;") + "</pre>";
       }
       // コントローラー
       function controller(){
-        convert();
+        html = convert();
+        // 出力欄にレンダリングされたHTMLを出力
+        document.getElementById("html-output").innerHTML = html;
+        // モーダル内にHTMLソースを表示
+        setSource();
       }
     </script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

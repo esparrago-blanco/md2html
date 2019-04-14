@@ -46,7 +46,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Downloads</button>
+            <a class="btn btn-primary" id="download-button" href="#" download="hoge.html" onclick="fileDownload()">Download</a>
           </div>
         </div>
       </div>
@@ -69,6 +69,8 @@
     <script>
       // 変換後のHTML
       var html;
+      // ファイル名
+      var fileName = "new file"
       // 入力値をマークダウンに変換
       function convert(){
         var s = document.getElementById("md-input").value;
@@ -76,6 +78,12 @@
       }
      function setSource(){
         document.getElementById("html-source").innerHTML = "<pre>" +  html.replace(/</g,"&lt;") + "</pre>";
+      }
+      // ファイルダウンロード
+      function fileDownload(){
+        var blob = new Blob([html], { "type " : "text/html" });
+        document.getElementById("download-button").download = fileName.concat('.html');
+        document.getElementById("download-button").href = window.URL.createObjectURL(blob);
       }
       // コントローラー
       function controller(){

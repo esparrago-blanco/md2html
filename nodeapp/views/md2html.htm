@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>md2html</title>
+    <!--CSS読み込み -->
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  </head>
+  <body>
+    <!-- jQuery読み込み -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- BootstrapのJS読み込み -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- markd読み込み -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!--ナビゲーション-->
+    <nav class="navbar navbar-expand-lg navbar-light " style="background-color: #e3f2fd;">
+      <a class="navbar-brand" href="#">md2html</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <!--Publishボタン-->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Publish</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalHtml">HTML source</a>
+            </div>
+          </li>
+      </div>
+      <div class="mx-auto" style="width: 200px;">
+        <input class="form-control" id="file-title" type="text" placeholder="newDocument" onKeyUp=setFileName()>
+      </div>
+    </nav>
+    <!-- モーダルウインドウ -->
+    <div class="modal fade" id="modalHtml" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalScrollableTitle">HTML source</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="html-source">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <a class="btn btn-primary" id="download-button" href="#" download="hoge.html" onclick="fileDownload()">Download</a>
+          </div>
+        </div>
+      </div>
+    </div>
+   <main> 
+     <div class="container-fluid">
+        <div class="row">
+          <!-- 入力欄 -->
+          <div class="col-sm-6">
+            <textarea id="md-input" class="form-control"
+              rows="35" onKeyUp="controller()" autofocus placeholder="# Start markdown here"></textarea>
+          </div><!-- col -->
+          <!-- 出力欄 -->
+          <div class="col-sm-6">
+             <div id="html-output">
+          </div><!-- col -->
+        </div><!-- row -->
+      </div>
+    </main>
+    <script>
+      // 変換後のHTML
+      var html;
+      // 文書タイトル設定
+      var fileName = "newDocument";
+      function setFileName(){
+        fileName = document.getElementById("file-title").value;
+      }
+      // 入力値をマークダウンに変換
+      function convert(){
+        var s = document.getElementById("md-input").value;
+        return marked(s);
+      }
+     function setSource(){
+        document.getElementById("html-source").innerHTML = "<pre>" +  html.replace(/</g,"&lt;") + "</pre>";
+      }
+      // ファイルダウンロード
+      function fileDownload(){
+        var blob = new Blob([html], { "type " : "text/html" });
+        // ファイル名が空なら"newDocument"を設定する
+        if (fileName == null || fileName == "" ){
+          fileName = "newDocument";
+        }
+        document.getElementById("download-button").download = fileName.concat('.html');
+        document.getElementById("download-button").href = window.URL.createObjectURL(blob);
+      }
+      // コントローラー
+      function controller(){
+        html = convert();
+        // 出力欄にレンダリングされたHTMLを出力
+        document.getElementById("html-output").innerHTML = html;
+        // モーダル内にHTMLソースを表示
+        setSource();
+      }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
